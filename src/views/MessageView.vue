@@ -26,23 +26,22 @@
 
       <div
         id="MessagesSection"
-        class="pt-20 pb-8 z-[-1] h-[calc(100vh-65px)] w-[calc(100vw-420px)] overflow-auto fixed touch-auto"
-      >
+        class="pt-20 pb-8 z-[-1] h-[calc(100vh-65px)] w-[calc(100vw-420px)] overflow-auto fixed touch-auto">
         <div
           v-if="currentChat && currentChat[0]?.messages"
           class="px-20 text-sm"
         >
           <div v-for="msg in currentChat[0].messages" :key="msg">
-            <div v-if="msg.sub === sub" class="flex justify-end space-x-1 w-[calc(100%-50px)] float-right" >
-              <div  class="inline-block bg-green-200 p-2 rounded-md my-1 ">
+            <div
+              v-if="msg.sub === sub"
+              class="flex justify-end space-x-1 w-[calc(100%-50px)] float-right"
+            >
+              <div class="inline-block bg-green-200 p-2 rounded-md my-1">
                 {{ msg.message }}
               </div>
             </div>
 
-            <div
-              v-else
-               class="flex w-[calc(100%-50px)]"
-            >
+            <div v-else class="flex w-[calc(100%-50px)]">
               <div class="inline-block bg-white p-2 rounded-md my-1">
                 {{ msg.message }}
               </div>
@@ -51,6 +50,10 @@
         </div>
       </div>
 
+        <div v-if="showSpotifyPlayer">
+            <spotifyComponent class=" fixed bottom-20 bg-[#F0F0F0] rounded z-40 overflow-auto "/>            
+        </div>  
+
       <div class="w-[calc(100vw-420px)] p-2.5 z-10 bg-[#F0F0F0] fixed bottom-0">
         <div class="flex items-center justify-center">
           <EmoticonExcitedOutlineIcon
@@ -58,7 +61,20 @@
             fillColor="#515151"
             class="mx-1.5"
           />
-          <PaperclipIcon :size="27" fillColor="#515151" class="mx-1.5 mr-3" />
+          <button
+            :disabled="disableBtn"
+            @click="showSpotifyPlayer=!showSpotifyPlayer"
+            class="flex items-center justify-center"
+          >
+            <img
+              class="rounded-full mr-3 w-7 p-0.5 mx-1.5"
+              src="../../Spotify_icon.svg.png"
+            />
+          </button>
+
+          
+
+          <!-- <PaperclipIcon :size="27" fillColor="#515151" class="mx-1.5 mr-3" /> -->
           <input
             v-model="message"
             class="mr-1 shadow apperance-none rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -85,12 +101,14 @@ import DotsVerticalIcon from "vue-material-design-icons/DotsVertical.vue";
 import EmoticonExcitedOutlineIcon from "vue-material-design-icons/EmoticonExcitedOutline.vue";
 import PaperclipIcon from "vue-material-design-icons/Paperclip.vue";
 import SendIcon from "vue-material-design-icons/Send.vue";
+import spotifyComponent from "../components/spotifyComponent.vue";
 import { ref, watch } from "vue";
 
 import { useUserStore } from "../store/user-store";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
-const { userDataForChat, currentChat, sub } = storeToRefs(userStore);
+const { userDataForChat, currentChat, sub, showSpotifyPlayer } = storeToRefs(userStore);
+
 
 let message = ref("");
 let disableBtn = ref(false);
@@ -141,15 +159,27 @@ const sendMessage = async () => {
   objDiv.scrollTop = objDiv.scrollHeight;
 
   disableBtn.value = false;
-};
+}
+
+
+
+
+;
 </script>
 
 <style>
 #BG {
-  background: url("../../public/message-bg.png") no-repeat center;
+  background: url("../../message-bg.png") no-repeat center;
   width: 100%;
   height: 100%;
   position: fixed;
   z-index: -1;
+}
+
+.spotify-embed-container {
+  /* Position the container relative to its closest positioned ancestor (likely the parent component) */
+  top: calc(); /* Adjust as needed to position the Spotify window just above the button */
+  left: 8%; /* Position the container horizontally centered relative to its closest positioned ancestor */
+  transform: translateX(-20%); /* Center the container horizontally */
 }
 </style>

@@ -1,15 +1,21 @@
-import { defineStore } from 'pinia'
+import {
+  defineStore
+} from 'pinia'
 import axios from 'axios'
-import { v4 as uuid } from 'uuid';
-import { db } from '@/firebase-init'
-import { 
-  setDoc, 
-  getDoc, 
-  doc, 
-  getDocs, 
-  collection, 
-  updateDoc, 
-  arrayUnion, 
+import {
+  v4 as uuid
+} from 'uuid';
+import {
+  db
+} from '@/firebase-init'
+import {
+  setDoc,
+  getDoc,
+  doc,
+  getDocs,
+  collection,
+  updateDoc,
+  arrayUnion,
   onSnapshot,
   query
 } from 'firebase/firestore';
@@ -28,38 +34,59 @@ export const useUserStore = defineStore('user', {
     userDataForChat: [],
     showFindFriends: false,
     currentChat: null,
-    removeUsersFromFindFriends: []
+    removeUsersFromFindFriends: [],
+    showSpotifyPlayer: false,
+    spotifyTokenTimeStamp:''
   }),
   actions: {
     async getUserDetailsFromGoogle(data) {
       try {
-          let res = await axios.post('api/google-login', {
-              token: data.credential
-          })
+        let res = await axios.post('api/google-login', {
+          token: data.credential
+        })
 
-          let userExists = await this.checkIfUserExists(res.data.sub)
-          if (!userExists) await this.saveUserDetails(res)
+        let userExists = await this.checkIfUserExists(res.data.sub)
+        if (!userExists) await this.saveUserDetails(res)
 
-          await this.getAllUsers()
-          
-          this.sub = res.data.sub
-          this.email = res.data.email
-          this.picture = res.data.picture
-          this.firstName = res.data.given_name
-          this.lastName = res.data.family_name
+        await this.getAllUsers()
+
+        this.sub = res.data.sub
+        this.email = res.data.email
+        this.picture = res.data.picture
+        this.firstName = res.data.given_name
+        this.lastName = res.data.family_name
       } catch (error) {
-          console.log(error)
+        console.log(error)
       }
     },
 
-    async getAllUsers () {
+    async getSpotifyToken() {
+
+        try {
+          let res = await axios.post('/api/spotifyLogin');
+          this.spotifyToken = res.data.token;
+        } catch (error) {
+          console.error('Error fetching Spotify token:', error);
+        }
+
+      return this.spotifyToken || '';
+    },
+
+    
+
+
+    async getAllUsers() {
       const querySnapshot = await getDocs(collection(db, "users"))
       let results = []
-      querySnapshot.forEach(doc => { results.push(doc.data()) })
+      querySnapshot.forEach(doc => {
+        results.push(doc.data())
+      })
 
       if (results.length) {
         this.allUsers = []
-        results.forEach(res => { this.allUsers.push(res) })
+        results.forEach(res => {
+          this.allUsers.push(res)
+        })
       }
     },
 
@@ -69,7 +96,7 @@ export const useUserStore = defineStore('user', {
       return docSnap.exists()
     },
 
-    async saveUserDetails (res) {
+    async saveUserDetails(res) {
       try {
         await setDoc(doc(db, "users", res.data.sub), {
           sub: res.data.sub,
@@ -141,7 +168,7 @@ export const useUserStore = defineStore('user', {
       })
     },
 
-    async sendMessage (data) {
+    async sendMessage(data) {
       try {
         if (data.chatId) {
           await updateDoc(doc(db, `chat/${data.chatId}`), {
@@ -181,7 +208,9 @@ export const useUserStore = defineStore('user', {
       await updateDoc(doc(db, `chat/${data.id}`), {
         [data.key1]: data.val1,
         [data.key2]: data.val2
-      }, { merge:true })
+      }, {
+        merge: true
+      })
     },
 
     logout() {
@@ -196,6 +225,7 @@ export const useUserStore = defineStore('user', {
       this.removeUsersFromFindFriends = []
       this.showFindFriends = false
       this.currentChat = false
+      this.spotifyToken = ''
     }
   },
   persist: true
