@@ -39,13 +39,13 @@
                 class="flex justify-end space-x-1 w-[calc(100%-50px)] float-right"
               >
                 <div class="inline-block bg-green-200 p-2 rounded-md my-1">
-                  <spotifyMessageComponent />
+                    <spotifyMessageComponent :trackId="extractTrackId(msg.message)" />
                 </div>
               </div>
 
               <div v-else class="flex w-[calc(100%-50px)]">
                 <div class="inline-block bg-white p-2 rounded-md my-1">
-                  <spotifyMessageComponent />
+                  <spotifyMessageComponent :trackId="extractTrackId(msg.message)" />
                 </div>
               </div>
             </div>
@@ -71,7 +71,7 @@
       </div>
 
       <div v-if="showSpotifyPlayer">
-        <spotifyComponent
+        <spotifyComponent @sendSelectedTrackUri="receiveSelectedTrackUri"
           class="fixed bottom-20 bg-[#F0F0F0] rounded z-40 overflow-auto"
         />
       </div>
@@ -122,17 +122,24 @@ import EmoticonExcitedOutlineIcon from "vue-material-design-icons/EmoticonExcite
 import PaperclipIcon from "vue-material-design-icons/Paperclip.vue";
 import SendIcon from "vue-material-design-icons/Send.vue";
 import spotifyComponent from "../components/spotifyComponent.vue";
-import spotifyMessageComponent from "../components/spotifyComponent.vue";
-import { ref, watch, computed } from "vue";
+import spotifyMessageComponent from "../components/spotifyMessageComponent.vue";
+import { ref, watch, computed, onMounted } from "vue";
 
 import { useUserStore } from "../store/user-store";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
-const { userDataForChat, currentChat, sub, showSpotifyPlayer } =
-  storeToRefs(userStore);
+const { userDataForChat, currentChat, sub, showSpotifyPlayer } =  storeToRefs(userStore);
+
+
 
 let message = ref("");
 let disableBtn = ref(false);
+
+
+const receiveSelectedTrackUri = (selectedTrackUri) => {
+  message.value = selectedTrackUri.trackUri
+  console.log(message.value)
+};
 
 watch(
   () => currentChat.value,
@@ -147,8 +154,17 @@ watch(
   { deep: true }
 );
 
+
+const extractTrackId = (spotifyUri) => {
+  let trackId = { trackId: spotifyUri.split(":")[2] };
+  return spotifyUri.split(":")[2];
+};
+
 const isSpotifyTrack = (message) => {
-  return message.includes("spotify:track:");
+
+  const regex = /^spotify:track:/;
+  return regex.test(message);
+  // return message.includes("spotify:track:");
 };
 
 const sendMessage = async () => {

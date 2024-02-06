@@ -67,8 +67,18 @@ const tickColor = (chat) => {
 }
 
 const lastChatMessage = (chat) => {
-  return chat.messages[chat.messages.length - 1].message.substring(0,20)
-}
+  const lastMessage = chat.messages[chat.messages.length - 1].message;
+  
+  const spotifyTrackRegex = /^spotify:track:/;
+
+  if (spotifyTrackRegex.test(lastMessage)) {
+
+    return "Spotify Track";
+  } else {
+
+    return lastMessage.substring(0, 20);
+  }
+};
 
 const lastCreatedAt = (chat) => {
   if (chat.messages.length) {

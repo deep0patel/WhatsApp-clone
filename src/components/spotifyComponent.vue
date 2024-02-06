@@ -24,7 +24,7 @@
           :key="track.index"
           class="flex justify-between relative overflow-y-auto"
         >
-          <div class="w-1/3 relative">
+          <div class="w-1/3 relative" @dblclick="selectedTrackUri(track.index)">
             <iframe
               :src="`https://open.spotify.com/embed/track/${track.trackId}`"
               width="300"
@@ -36,7 +36,7 @@
           </div>
           <div class="w-1/3 text-right">
             <button
-              @click="sendTrack(track.trackId)"
+              @click="selectedTrackUri(track.index)"
               class="bg-white p-2 rounded-md shadow-md mt-5 ml-0.5"
             >
               <SendIcon fillColor="#515151" />
@@ -53,7 +53,7 @@
 <script setup>
 import MagnifyIcon from "vue-material-design-icons/Magnify.vue";
 import SendIcon from "vue-material-design-icons/Send.vue";
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import { useUserStore } from "../store/user-store";
 import { storeToRefs } from "pinia";
 import axios from "axios";
@@ -62,7 +62,15 @@ const userStore = useUserStore();
 let trackUris = ref([]);
 let trackIds = ref([]);
 
-const sendTrack = async () => {};
+const emit = defineEmits("sendSelectedTrackUri");
+
+const selectedTrackUri = (index) => { 
+    if (trackUris.value.length > 0 && index >= 0 && index < trackUris.value.length) {
+    // console.log(trackUris.value[index]);
+    emit("sendSelectedTrackUri", trackUris.value[index] )
+    return trackUris.value[index];
+  }
+};
 
 const constructSearchQuery = async () => {
   trackIds.value = [];
@@ -90,43 +98,16 @@ const constructSearchQuery = async () => {
 const handleResponseData = (data) => {
   data.tracks.items.forEach((item, index) => {
 
-    trackUris.value.push({ index: index, trackUri: item });
+    trackUris.value.push({ index: index, trackUri: item.uri });
     trackIds.value.push({
       index: index,
       trackId: item.uri.split(":")[2],
     });
 
-    // console.log(trackIds);
   });
 };
 
-// // make authorization header
-// const headers = new Headers();
-// headers.append("Authorization", "Bearer " + token);
 
-// // make the fetch request
-// fetch(queryString, {
-//   method: "GET",
-//   headers: headers,
-// })
-//   .then((response) => {
-//     if (!response.ok) {
-//       throw new Error("Network response was not ok");
-//     }
-//     return response.json();
-//   })
-//   .then((data) => {
-//     //finaly i am getting the answer now i need to manipulate data
-//     data.tracks.items.forEach((item, index) => {
-//       const trackId = item.uri.split(":")[2];
-//       trackIds.value.push({ index: index + 1, trackId: trackId });
-//     });
-
-//     console.log(trackIds)
-//   })
-//   .catch((error) => {
-//     console.error("There was a problem with your fetch operation:", error);
-//   });
 </script>
 
 <style lang="scss" scoped>
