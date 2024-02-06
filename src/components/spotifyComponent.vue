@@ -59,15 +59,14 @@ import { storeToRefs } from "pinia";
 import axios from "axios";
 const userStore = useUserStore();
 // const { spotifyToken } = storeToRefs(userStore);
+let trackUris = ref([]);
 let trackIds = ref([]);
 
 const sendTrack = async () => {};
 
 const constructSearchQuery = async () => {
-
   trackIds.value = [];
   let spotifyToken = await userStore.getSpotifyToken();
-
 
   var searchText = document.getElementById("trackSearch").value;
   var queryString =
@@ -82,8 +81,6 @@ const constructSearchQuery = async () => {
     });
 
     // Handle the response data asynchronously
-
-    console.log(res.data);
     handleResponseData(res.data);
   } catch (error) {
     console.log(error);
@@ -92,13 +89,14 @@ const constructSearchQuery = async () => {
 
 const handleResponseData = (data) => {
   data.tracks.items.forEach((item, index) => {
-    const trackId = item.uri.split(":")[2];
+
+    trackUris.value.push({ index: index, trackUri: item });
     trackIds.value.push({
-      index: index + 1,
-      trackId: trackId,
+      index: index,
+      trackId: item.uri.split(":")[2],
     });
 
-    console.log(trackIds);
+    // console.log(trackIds);
   });
 };
 
