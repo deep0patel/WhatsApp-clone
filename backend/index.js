@@ -12,8 +12,8 @@ const {
     OAuth2Client
 } = require("google-auth-library");
 const client = new OAuth2Client('50416203441-kpni69ojdimi8h3dlpgokkscs9o0avfm.apps.googleusercontent.com')
-const client_id = 'bca5ab5db4964b84a967654e653ba05e'
-const client_secret = '94f5703d04214b21a83f22e8f3b79c78'
+const spotify_client_id = 'bca5ab5db4964b84a967654e653ba05e'
+const spotify_client_secret = '94f5703d04214b21a83f22e8f3b79c78'
 const redirectUri = 'http://localhost:5173/';
 const scope = 'user-read-private user-read-email';
 const authUrl = new URL("https://accounts.spotify.com/authorize")
@@ -44,7 +44,7 @@ app.post('/api/spotifyLogin', async (req, res) => {
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
         headers: {
-            'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')),
+            'Authorization': 'Basic ' + (new Buffer.from(spotify_client_id + ':' + spotify_client_secret).toString('base64')),
             'Content_Type': 'application/x-www-form-urlencoded'
         },
         form: {

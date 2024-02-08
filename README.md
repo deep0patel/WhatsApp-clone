@@ -1,7 +1,49 @@
-# Vue 3 + Vite
+# WhatsApp Clone App Setup
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Clone the Repository
+```
+git clone https://github.com/deep0patel/WhatsApp-clone.git 
+```
 
-## Recommended IDE Setup
+## Setup Google Cloud Platform API Key
+1. Go to Google Cloud Console.
+2. Generate an API key.
+3. Add your new API key to the following files:
+   - src/main.js
+   - backend/index.js
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Setup Firebase Firestore
+1. Add Firebase details to src/firebase-init.js.
+
+## Spotify Integration
+
+If the Spotify integration function does not work:
+
+- Consider creating an account on the Spotify Developer Dashboard and obtain the client_id and client_secret.
+- Update the backend/index.js file with the new Spotify credentials.
+Start the Project
+
+## Install dependencies
+npm i
+
+## Start the frontend
+npm run dev
+
+## Start the Backend
+
+cd backend
+
+## Install dependencies
+npm i
+
+## Start the backend server
+npm run watch
+
+## Images
+
+![alt text](<Screenshot (558).png>) 
+
+![alt text](<Screenshot (557).png>)
+
+![alt text](<Screenshot (556).png>)
+
