@@ -90,7 +90,7 @@
           >
             <img
               class="rounded-full mr-3 w-7 p-0.5 mx-1.5"
-              src="../../Spotify_icon.svg.png"
+              src="../../public/Spotify_icon.svg.png"
             />
           </button>
 
@@ -205,7 +205,7 @@ const sendMessage = async () => {
 
 <style>
 #BG {
-  background: url("../../message-bg.png") no-repeat center;
+  background: url("../../public/message-bg.png") no-repeat center;
   width: 100%;
   height: 100%;
   position: fixed;
