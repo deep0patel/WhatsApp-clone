@@ -126,3 +126,7 @@ const port = process.env.PORT || 4001;
 app.listen(port, () => {
     console.log(`Server is ready at http://localhost:${port}`);
 });
+
+// ... (previous code) 
+module.exports = app; 
+// Export the Express app
