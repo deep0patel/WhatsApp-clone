@@ -25,7 +25,7 @@ import {
 // // Load environment variables from .env file
 // config();
 
-axios.defaults.baseURL =  'http://localhost:4001/'
+axios.defaults.baseURL =  'https://whats-app-clone-fzc8.vercel.app/'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
