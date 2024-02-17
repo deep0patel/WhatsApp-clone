@@ -11,12 +11,17 @@ const axios = require('axios');
 const {
     OAuth2Client
 } = require("google-auth-library");
-const client = new OAuth2Client('50416203441-kpni69ojdimi8h3dlpgokkscs9o0avfm.apps.googleusercontent.com')
-const spotify_client_id = 'bca5ab5db4964b84a967654e653ba05e'
-const spotify_client_secret = '94f5703d04214b21a83f22e8f3b79c78'
-const redirectUri = 'http://localhost:5173/';
-const scope = 'user-read-private user-read-email';
-const authUrl = new URL("https://accounts.spotify.com/authorize")
+
+require('dotenv').config();
+
+
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
+const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const redirectUri = process.env.REDIRECT_URI;
+const scope = process.env.SCOPE;
+const authUrl = new URL("https://accounts.spotify.com/authorize");
 const trackIds = [];
 
 
@@ -92,28 +97,12 @@ app.get('/api/spotifySearch', async (req, res) => {
                 return response.json();
             })
             .then((data) => {
-                // data.tracks.items.forEach((item, index) => {
-                //     const trackId = item.uri.split(":")[2];
-                //     trackIds.value.push({
-                //         index: index + 1,
-                //         trackId: trackId
-                //     });
-                // })
-                // data = data
 
                 res.status(200).json(data);
             })
             .catch((error) => {
                 console.error("There was a problem with your fetch operation:", error);
             });
-
-        // const response = await axios.get(queryString, {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`
-        //   }
-        // });
-        // res.json(response.data);
-        // // console.log(response.data)
     } catch (error) {
         console.error("There was a problem with your fetch operation:", error);
         res.status(500).json({
@@ -133,6 +122,7 @@ app.post('/api/google-login', async (req, res) => {
 })
 
 
-app.listen(4001, () => {
-    console.log(`Server is ready at http://localhost:4001`);
+const port = process.env.PORT || 4001;
+app.listen(port, () => {
+    // console.log(`Server is ready at http://localhost:${port}`);
 });
