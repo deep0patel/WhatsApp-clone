@@ -20,12 +20,12 @@ import {
   query
 } from 'firebase/firestore';
 
-import { config } from 'dotenv';
+// import { config } from 'dotenv';
 
-// Load environment variables from .env file
-config();
+// // Load environment variables from .env file
+// config();
 
-axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:4001/'
+axios.defaults.baseURL =  'http://localhost:4001/'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
