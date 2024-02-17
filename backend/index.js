@@ -124,5 +124,5 @@ app.post('/api/google-login', async (req, res) => {
 
 const port = process.env.PORT || 4001;
 app.listen(port, () => {
-    // console.log(`Server is ready at http://localhost:${port}`);
+    console.log(`Server is ready at http://localhost:${port}`);
 });

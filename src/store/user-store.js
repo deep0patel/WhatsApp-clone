@@ -20,7 +20,7 @@ import {
   query
 } from 'firebase/firestore';
 
-axios.defaults.baseURL = 'http://localhost:4001/'
+axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:4001/'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
